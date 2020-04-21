@@ -14,5 +14,7 @@ public class ShowHonorListActivity extends AppCompatActivity {
     }
 
     public void onclick(View view) {
+        switch (view.getId()){
+        }
     }
 }
