@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/CardView_LinerLayout"
+    android:clickable="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/CardView_items"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/ImageView_CardView_Image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:progressBarImage="@drawable/icon_loading"
+                app:progressBarAutoRotateInterval="1000"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/TextView_CardView_Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="35sp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="@android:color/black"
+                app:layout_constraintTop_toBottomOf="@id/ImageView_CardView_Image" />
+
+            <TextView
+                android:id="@+id/TextView_CardView_Contents"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:paddingTop="20dp"
+                android:maxLines="4"
+                android:ellipsize="end"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/TextView_CardView_Title" />
+
+            <ImageView
+                android:id="@+id/ImageView_ViewCount"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/icon_viewcount"
+                android:layout_margin="5dp"
+                app:layout_constraintLeft_toLeftOf="@id/TextView_CardView_Contents"
+                app:layout_constraintTop_toTopOf="@id/TextView_CardView_Contents"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:id="@+id/TextView_ViewCount"
+                android:text="1000"
+                android:layout_marginLeft="5dp"
+                app:layout_constraintLeft_toRightOf="@id/ImageView_ViewCount"
+                app:layout_constraintBottom_toBottomOf="@id/ImageView_ViewCount"
+                app:layout_constraintTop_toTopOf="@id/ImageView_ViewCount"/>
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/CircleImageView_PostProfileImage"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                app:roundAsCircle="true"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/icon_editor"
+                app:layout_constraintTop_toBottomOf="@id/TextView_CardView_Contents"
+                app:layout_constraintLeft_toLeftOf="@id/TextView_CardView_Contents"/>
+
+            <TextView
+                android:id="@+id/TextView_PostProfileName"
+                android:layout_width="361dp"
+                android:layout_height="36dp"
+                android:layout_marginLeft="5dp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="@id/CircleImageView_PostProfileImage"
+                app:layout_constraintLeft_toRightOf="@id/CircleImageView_PostProfileImage"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/CircleImageView_PostProfileImage" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

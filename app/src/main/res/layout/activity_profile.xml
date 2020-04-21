@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity">
+
+
+    <ImageView
+        android:background="@android:color/darker_gray"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/EditText_ShowNick"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_margin="15dp"
+        android:id="@+id/ImageView_Profile"
+        android:layout_height="200dp"
+        android:layout_width="0dp"
+        android:clickable="true"
+        android:onClick="onclick"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+
+    <EditText
+        android:id="@+id/EditText_ShowNick"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ImageView_Profile"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#EAEAEA"
+        app:layout_constraintTop_toBottomOf="@id/EditText_ShowNick"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:id="@+id/Button_MyPostNumber"
+        android:background="@drawable/blue_edge"
+        android:gravity="center"
+        android:text="내 게시글수\n0"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/EditText_ShowNick"
+        app:layout_constraintRight_toLeftOf="@id/Button_MyCommentNumber"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/Button_MyCommentNumber"
+        android:background="@drawable/blue_edge"
+        android:gravity="center"
+        android:text="내 댓글수\n0"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="@id/Button_MyPostNumber"
+        app:layout_constraintLeft_toRightOf="@id/Button_MyPostNumber"
+        app:layout_constraintRight_toLeftOf="@id/Button_MySubscribeNumber"
+        app:layout_constraintBottom_toBottomOf="@id/Button_MyPostNumber"/>
+
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/Button_MySubscribeNumber"
+        android:background="@drawable/blue_edge"
+        android:gravity="center"
+        android:text="내 구독수\n0"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="@id/Button_MyPostNumber"
+        app:layout_constraintLeft_toRightOf="@id/Button_MyCommentNumber"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/Button_MyPostNumber"/>
+
+    <TextView
+        android:layout_margin="10dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/TextView_Popular"
+        android:text="내 인기글"
+        android:textColor="@android:color/holo_blue_light"
+        android:textSize = "35sp"
+        app:layout_constraintTop_toBottomOf="@id/Button_MyPostNumber"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/TextView_Popular_sub"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="현재 자신의 인기글을 확인 해보세요"
+        android:textSize="20sp"
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/TextView_Popular"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:elevation="10dp"
+        android:id="@+id/Constraint_MainButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/Button_Main"
+            android:text="Main"
+            android:clickable="true"
+            android:onClick="onclick"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/Button_Trending">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/icon_main"
+                android:padding="10dp"
+                android:background="@null" />
+
+            <ImageView
+                android:id="@+id/ImageView_MainIndicator"
+                android:layout_width="50dp"
+                android:layout_height="5dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/Button_Trending"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            app:layout_constraintTop_toTopOf="@id/Button_Profile"
+            app:layout_constraintBottom_toBottomOf="@id/Button_Profile"
+            app:layout_constraintLeft_toRightOf="@id/Button_Main"
+            app:layout_constraintRight_toLeftOf="@id/Button_AddNewWrok">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/icon_trending"
+                android:padding="5dp"
+                android:background="@null" />
+
+            <ImageView
+                android:id="@+id/ImageView_TrendingIndicator"
+                android:layout_width="50dp"
+                android:layout_height="5dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/Button_AddNewWrok"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:onClick="onclick"
+            android:clickable="true"
+            app:layout_constraintTop_toTopOf="@id/Button_Profile"
+            app:layout_constraintBottom_toBottomOf="@id/Button_Profile"
+            app:layout_constraintLeft_toRightOf="@id/Button_Trending"
+            app:layout_constraintRight_toLeftOf="@id/Button_Honor">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:src="@drawable/icon_add1"
+                android:padding="5dp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/Button_Honor"
+            app:layout_constraintTop_toTopOf="@id/Button_Profile"
+            app:layout_constraintBottom_toBottomOf="@id/Button_Profile"
+            app:layout_constraintLeft_toRightOf="@id/Button_AddNewWrok"
+            app:layout_constraintRight_toLeftOf="@id/Button_Profile">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/icon_king2"
+                android:padding="10dp"
+                android:background="@null" />
+
+            <ImageView
+                android:id="@+id/ImageView_HonorIndicator"
+                android:layout_width="50dp"
+                android:layout_height="5dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/Button_Profile"
+            android:layout_height="60dp"
+            android:layout_width="0dp"
+            android:text="profile"
+            android:clickable="true"
+            app:layout_constraintLeft_toRightOf="@id/Button_Honor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/icon_profile"
+                android:padding="5dp"
+                android:background="@null" />
+
+            <ImageView
+                android:id="@+id/ImageView_ProfileIndicator"
+                android:layout_width="50dp"
+                android:layout_height="5dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:fitsSystemWindows="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/Constraint_MainActivity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="3dp"
+            android:id="@+id/toolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/Button_Category"
+                    android:layout_width="30dp"
+                    android:clickable="true"
+                    android:onClick="onclick"
+                    android:src="@drawable/icon_category_menu"
+                    android:layout_height="30dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+                <ImageView
+                    android:id="@+id/Button_Refresh"
+                    android:layout_width="30dp"
+                    android:clickable="true"
+                    android:onClick="onclick"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_refresh"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/Button_Main_Menu"/>
+
+                <ImageView
+                    android:onClick="onclick"
+                    android:clickable="true"
+                    android:id="@+id/Button_Main_Menu"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/icon_menu"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"/>
+
+                <TextView
+                    android:text="MyWorld"
+                    android:textColor="@android:color/black"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    app:layout_constraintLeft_toRightOf="@id/Button_Category"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RecyclerView_CardView"
+            android:layout_width="406dp"
+            android:layout_height="618dp"
+            app:layout_constraintBottom_toTopOf="@id/Constraint_MainButtons"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintVertical_bias="1.0"
+            tools:layout_editor_absoluteX="5dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:elevation="10dp"
+            android:id="@+id/Constraint_MainButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:id="@+id/Button_Main"
+                android:text="Main"
+                android:clickable="true"
+                android:onClick="onclick"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/Button_Trending">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_main"
+                    android:padding="10dp"
+                    android:background="@null" />
+
+                <ImageView
+                    android:id="@+id/ImageView_MainIndicator"
+                    android:layout_width="50dp"
+                    android:layout_height="5dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/Button_Trending"
+                android:layout_height="0dp"
+                android:layout_width="0dp"
+                app:layout_constraintTop_toTopOf="@id/Button_Profile"
+                app:layout_constraintBottom_toBottomOf="@id/Button_Profile"
+                app:layout_constraintLeft_toRightOf="@id/Button_Main"
+                app:layout_constraintRight_toLeftOf="@id/Button_AddNewWrok">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_trending"
+                    android:padding="5dp"
+                    android:background="@null" />
+
+                <ImageView
+                    android:id="@+id/ImageView_TrendingIndicator"
+                    android:layout_width="50dp"
+                    android:layout_height="5dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/Button_AddNewWrok"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:onClick="onclick"
+                android:clickable="true"
+                app:layout_constraintTop_toTopOf="@id/Button_Profile"
+                app:layout_constraintBottom_toBottomOf="@id/Button_Profile"
+                app:layout_constraintLeft_toRightOf="@id/Button_Trending"
+                app:layout_constraintRight_toLeftOf="@id/Button_Honor">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:src="@drawable/icon_add1"
+                    android:padding="5dp"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:id="@+id/Button_Honor"
+                app:layout_constraintTop_toTopOf="@id/Button_Profile"
+                app:layout_constraintBottom_toBottomOf="@id/Button_Profile"
+                app:layout_constraintLeft_toRightOf="@id/Button_AddNewWrok"
+                app:layout_constraintRight_toLeftOf="@id/Button_Profile">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_king2"
+                    android:padding="10dp"
+                    android:background="@null" />
+
+                <ImageView
+                    android:id="@+id/ImageView_HonorIndicator"
+                    android:layout_width="50dp"
+                    android:layout_height="5dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/Button_Profile"
+                android:layout_height="60dp"
+                android:layout_width="0dp"
+                android:text="profile"
+                android:clickable="true"
+                app:layout_constraintLeft_toRightOf="@id/Button_Honor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_profile"
+                    android:padding="5dp"
+                    android:background="@null" />
+
+                <ImageView
+                    android:id="@+id/ImageView_ProfileIndicator"
+                    android:layout_width="50dp"
+                    android:layout_height="5dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:layout_gravity="start">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/Constraint_Drawer_ProfileImage"
+                android:layout_width="match_parent"
+                android:background="@android:color/darker_gray"
+                android:layout_height="250dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/SimpleDraweeView_Drawer_ProfileImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:roundAsCircle="true"
+                    android:padding="50dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <TextView
+                android:id="@+id/TextView_Drawer_ProfileName"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"
+                android:layout_width="match_parent"
+                android:textColor="@android:color/black"
+                android:layout_height="50dp"
+                app:layout_constraintBottom_toBottomOf="@id/Constraint_Drawer_ProfileImage" />
+
+            <ImageView
+                android:layout_marginTop="10dp"
+                android:id="@+id/Button_Category_Illu"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:clickable="true"
+                android:onClick="onclick"
+                android:src="@drawable/icon_illu"
+                app:layout_constraintRight_toLeftOf="@id/Button_Category_Toon"
+                app:layout_constraintTop_toBottomOf="@id/TextView_Drawer_ProfileName"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <ImageView
+                android:id="@+id/Button_Category_Toon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/icon_toon"
+                app:layout_constraintTop_toTopOf="@id/Button_Category_Illu"
+                app:layout_constraintLeft_toRightOf="@id/Button_Category_Illu"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.navigation.NavigationView>
+
+</androidx.drawerlayout.widget.DrawerLayout>

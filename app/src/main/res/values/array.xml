@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="category">
+        <item>일러스트</item>
+        <item>만화</item>
+        <item>소설</item>
+    </string-array>
+</resources>

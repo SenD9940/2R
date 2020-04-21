@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/Delete_Image"
+        android:title="이미지 삭제"/>
+    <item android:title="취소"/>
+
+</menu>
