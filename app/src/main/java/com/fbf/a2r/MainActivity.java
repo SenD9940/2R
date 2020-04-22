@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.StatusBarManager;
 import android.content.Context;
@@ -80,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private DrawerLayout mdrawerLayout;
     private TextView TextView_Drawer_ProfileName;
+    private int click_count;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         SimpleDraweeViewProfileImage = findViewById(R.id.SimpleDraweeView_Drawer_ProfileImage);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        click_count = 0;
         mdrawerLayout = findViewById(R.id.drawer_layout);
         View view = getWindow().getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -124,10 +128,13 @@ public class MainActivity extends AppCompatActivity {
         Button_ShowProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent profile = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(profile);
-                overridePendingTransition(0, 0);
-                finish();
+                if(click_count < 1){
+                    click_count += 1;
+                    Intent profile = new Intent(MainActivity.this, ProfileActivity.class);
+                    startActivity(profile);
+                    overridePendingTransition(0, 0);
+                    finish();
+                }
             }
         });
         setCategory(getCategory);
@@ -197,6 +204,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void onclick(View view) {
         switch (view.getId()){
+            case R.id.Button_Honor:
+                Intent Honor = new Intent(this, ShowHonorListActivity.class);
+                startActivity(Honor);
+                overridePendingTransition(0, 0);
+                finish();
+
+                break;
             case R.id.Button_Main:
                 getCategory = null;
                 post(getCategory);

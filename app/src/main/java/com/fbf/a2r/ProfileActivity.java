@@ -13,13 +13,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -43,6 +48,8 @@ public class ProfileActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
+    private Button Button_MyPostNumber;
+    private int click_count;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -58,32 +65,27 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         View view = getWindow().getDecorView();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (view != null) {
-                // 23 버전 이상일 때 상태바 하얀 색상에 회색 아이콘 색상을 설정
-                view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                getWindow().setStatusBarColor(Color.parseColor("#f2f2f2"));
-            }
-        }
         view.getSystemUiVisibility();
-        getWindow().setStatusBarColor(Color.parseColor("#ffffff"));
+        getWindow().setStatusBarColor(Color.parseColor("#ABABAB"));
         Profile_Indicator = findViewById(R.id.ImageView_ProfileIndicator);
         Profile_Indicator.setBackgroundColor(Color.BLACK);
         firebaseAuth = firebaseAuth.getInstance();
+        click_count = 0;
         final FirebaseUser user = firebaseAuth.getCurrentUser();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
+        databaseReference = firebaseDatabase.getReference().child("MyWorld").child("User").child(firebaseAuth.getUid());
 
         profileImage = findViewById(R.id.ImageView_Profile);
         profileNick = findViewById(R.id.EditText_ShowNick);
+        Button_MyPostNumber = findViewById(R.id.Button_MyPostNumber);
         Button_AddNewWrok = findViewById(R.id.Button_AddNewWrok);
         Button_AddNewWrok.setClickable(true);
         profileNick.setFocusable(false);
         profileNick.setClickable(false);
-        profileNick.setText(firebaseAuth.getCurrentUser().getDisplayName().toString());
+        profileNick.setText(firebaseAuth.getCurrentUser().getDisplayName());
         profileNick.setTextSize(35);
         Thread mThread= new Thread(){
             @Override
@@ -111,6 +113,23 @@ public class ProfileActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ProfileDataSet profileDataSet = dataSnapshot.getValue(ProfileDataSet.class);
+                setProfile(profileDataSet);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+    public void setProfile(ProfileDataSet profileDataSet){
+        Button_MyPostNumber.setText("내 게시글 수\n" + profileDataSet.getMypostCount());
 
     }
 
@@ -123,11 +142,14 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(new_work);
                 break;
             case R.id.Button_Main:
-                Intent main = new Intent(ProfileActivity.this, MainActivity.class);
-                main.putExtra("로그인로그", "profile");
-                startActivity(main);
-                overridePendingTransition(0, 0);
-                finish();
+                if(click_count < 1) {
+                    click_count += 1;
+                    Intent main = new Intent(ProfileActivity.this, MainActivity.class);
+                    main.putExtra("로그인로그", "profile");
+                    startActivity(main);
+                    overridePendingTransition(0, 0);
+                    finish();
+                }
                 break;
         }
     }

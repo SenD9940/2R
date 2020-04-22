@@ -148,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
     public void setProfile() {
         if(!this.keys.contains(mAuth.getUid())){
             databaseReference = firebaseDatabase.getReference("MyWorld").child("User").child(mAuth.getUid());
-            ProfileDataSet profileDataSet = new ProfileDataSet(mAuth.getCurrentUser().getDisplayName(), mAuth.getCurrentUser().getPhotoUrl().toString(), "0", "0", mAuth.getUid());
+            ProfileDataSet profileDataSet = new ProfileDataSet(mAuth.getCurrentUser().getDisplayName(), mAuth.getCurrentUser().getPhotoUrl().toString(), "0", "0", mAuth.getUid(), "0");
             databaseReference.setValue(profileDataSet);
         }
     }

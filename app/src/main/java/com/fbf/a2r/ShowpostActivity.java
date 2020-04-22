@@ -22,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -39,7 +40,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,14 +52,15 @@ public class ShowpostActivity extends AppCompatActivity {
     private TextView TextView_ShowPost_Title, TextView_ShowPost_Contents, TextView_ShowPost_Author, TextView_ShowPost_ViewCount;
     private SimpleDraweeView SimpleDraweeView_ShowPost_PostImage;
     private ImageButton ImageButton_ShowPost_Menu;
-    private String Title, Contents, Author, GetDownloadUrl, ViewCount, Key, CommentOption, UserID, Context, Position;
+    private String Title, Contents, Author, GetDownloadUrl, ViewCount, Key, CommentOption, UserID, Context, Position, ImageName;
     private ActionBar actionBar;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
     private PostDataSet postDataSet;
-    private int count = 0;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +97,9 @@ public class ShowpostActivity extends AppCompatActivity {
         UserID = post.getStringExtra("Uid");
         Position = post.getStringExtra("Position");
         Context = post.getStringExtra("Context");
-        Log.d("showkey", Key);
+        ImageName = post.getStringExtra("ImageName");
         postDataSet = new PostDataSet();
-        databaseReference.child(Key).addValueEventListener(new ValueEventListener() {
+        databaseReference.child(Key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Update(dataSnapshot.getValue(PostDataSet.class));
@@ -105,13 +110,11 @@ public class ShowpostActivity extends AppCompatActivity {
 
             }
         });
-
-
-
         TextView_ShowPost_Title.setText(Title);
         TextView_ShowPost_Contents.setText(Contents);
         TextView_ShowPost_Author.setText(Author);
         TextView_ShowPost_ViewCount.setText(ViewCount);
+        getProfile("UpdatePostViewCount");
 
         if(GetDownloadUrl != null){
             SimpleDraweeView_ShowPost_PostImage.setVisibility(View.VISIBLE);
@@ -150,42 +153,14 @@ public class ShowpostActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case R.id.Delete_Post:
-                                if(UserID.equals(firebaseUser.getUid())){
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(ShowpostActivity.this);
-                                    builder.setTitle("글 삭제");
-                                    builder.setMessage("정말로 글을 삭제하시겠습니까?\n삭제된 글을 복구가 불가능합니다");
-                                    builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            databaseReference.child(Key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Toast.makeText(ShowpostActivity.this, "글삭제에 성공했습니다", Toast.LENGTH_LONG).show();
-                                                    Intent intent = new Intent(ShowpostActivity.this, MainActivity.class);
-                                                    intent.putExtra("로그인로그", "showpost");
-                                                    startActivity(intent);
-                                                    finish();
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(ShowpostActivity.this, "글삭제에 실패했습니다", Toast.LENGTH_LONG).show();
-                                                }
-                                            });
-                                        }
-                                    }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                                    AlertDialog dialog = builder.create();    // 알림창 객체 생성
-                                    dialog.show();
+                                if(GetDownloadUrl == null){
+                                    DeletePost();
                                 }else{
-                                    Toast.makeText(ShowpostActivity.this, "본인이 작성한 글만 삭제 하실 수 있습니다", Toast.LENGTH_LONG).show();
+                                    DeleteImage();
                                 }
                                 break;
                             case R.id.Update_Post:
+                                Toast.makeText(ShowpostActivity.this, "아직 개발중 입니다", Toast.LENGTH_SHORT).show();
                                 break;
                         }
                         return false;
@@ -203,14 +178,90 @@ public class ShowpostActivity extends AppCompatActivity {
         }
     }
 
+
     public void Update(PostDataSet postDataSet){
-        if(count == 0){
-            Map<String, Object> viewcount = new HashMap<String, Object>();
-            viewcount.put("postViewCount", String.valueOf(Integer.parseInt(postDataSet.getPostViewCount()) + 1));
-            databaseReference.child(Key).updateChildren(viewcount);
-            count = 1;
+        Map<String, Object> viewcount = new HashMap<String, Object>();
+        viewcount.put("postViewCount", String.valueOf(Integer.parseInt(postDataSet.getPostViewCount()) + 1));
+        databaseReference.child(Key).updateChildren(viewcount);
+
+    }
+    public void getProfile(final String Option){
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference databaseReference = firebaseDatabase.getReference().child("MyWorld").child("User").child(UserID);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ProfileDataSet profileDataSet = dataSnapshot.getValue(ProfileDataSet.class);
+                UpdateProfile(profileDataSet, Option);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void DeletePost(){
+        if(UserID.equals(firebaseUser.getUid())){
+            AlertDialog.Builder builder = new AlertDialog.Builder(ShowpostActivity.this);
+            builder.setTitle("글 삭제");
+            builder.setMessage("정말로 글을 삭제하시겠습니까?\n삭제된 글을 복구가 불가능합니다");
+            builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    databaseReference.child(Key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(ShowpostActivity.this, "글삭제에 성공했습니다", Toast.LENGTH_LONG).show();
+                            getProfile("UpdatePostCount");
+                            Intent intent = new Intent(ShowpostActivity.this, MainActivity.class);
+                            intent.putExtra("로그인로그", "showpost");
+                            startActivity(intent);
+                            finish();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(ShowpostActivity.this, "글삭제에 실패했습니다", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog dialog = builder.create();    // 알림창 객체 생성
+            dialog.show();
+        }else{
+            Toast.makeText(ShowpostActivity.this, "본인이 작성한 글만 삭제 하실 수 있습니다", Toast.LENGTH_LONG).show();
         }
-
-
+    }
+    public void DeleteImage(){
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
+        storageReference.child("PostImage").child(ImageName).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                DeletePost();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ShowpostActivity.this, "이미지 삭제에 실패했습니다", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    public void UpdateProfile(ProfileDataSet profileDataSet, String Option){
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference databaseReference = firebaseDatabase.getReference().child("MyWorld").child("User").child(UserID);
+        Map<String, Object> update = new HashMap<>();
+        if(Option.equals("UpdatePostViewCount")){
+            update.put("allPostViewCount", String.valueOf(Integer.parseInt(profileDataSet.getAllPostViewCount()) + 1));
+        }else if(Option.equals("UpdatePostCount")){
+            update.put("mypostCount", String.valueOf(Integer.parseInt(profileDataSet.getMypostCount()) - 1));
+        }
+        databaseReference.updateChildren(update);
     }
 }

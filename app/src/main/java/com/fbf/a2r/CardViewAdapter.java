@@ -57,6 +57,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.MyView
                         post.putExtra("Uid", mDataset.get(pos).getUid());
                         post.putExtra("ViewCount", mDataset.get(pos).getPostViewCount());
                         post.putExtra("Key", keys.get(pos));
+                        post.putExtra("ImageName", mDataset.get(pos).getImageName());
                         mContext.startActivity(post);
                     }
                 }

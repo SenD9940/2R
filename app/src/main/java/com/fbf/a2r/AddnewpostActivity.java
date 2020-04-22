@@ -53,7 +53,12 @@ import org.w3c.dom.Comment;
 
 import java.io.File;
 import java.sql.Array;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddnewpostActivity extends AppCompatActivity {
 
@@ -235,6 +240,7 @@ public class AddnewpostActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(AddnewpostActivity.this, "업로드 성공", Toast.LENGTH_SHORT).show();
+                        getProfile("add");
                         finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -248,8 +254,11 @@ public class AddnewpostActivity extends AppCompatActivity {
     }
     public void UploadImage(){
         final String ProfileImage = this.profileDataSet.get(0).getProfileImageUrl();
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final String now = simpleDateFormat.format(date);
         if(PhotoUri != null){
-            storageReference = storageReference.child("PostImage/" + PhotoUri.getLastPathSegment());
+            storageReference = storageReference.child("PostImage/" + Artist + now);
             uploadTask = storageReference.putFile(PhotoUri);
 
             final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -274,12 +283,13 @@ public class AddnewpostActivity extends AppCompatActivity {
                             FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                             DatabaseReference databaseReference = firebaseDatabase.getReference();
                             databaseReference = databaseReference.child("MyWorld").child("NewPost");
-                            PostDataSet postDataSet = new PostDataSet(EditText_PostTitle.getText().toString(), EditText_PostContents.getText().toString(), Artist, CommentOption, DownloadURL, ViewCount, AdViewCount, UserID, ProfileImage, Category);
+                            PostDataSet postDataSet = new PostDataSet(EditText_PostTitle.getText().toString(), EditText_PostContents.getText().toString(), Artist, CommentOption, DownloadURL, ViewCount, AdViewCount, UserID, ProfileImage, Category, Artist + now);
                             databaseReference.push().setValue(postDataSet).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(AddnewpostActivity.this, "업로드 성공", Toast.LENGTH_SHORT).show();
                                     PhotoUri = null;
+                                    getProfile("add");
                                     finish();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -334,5 +344,34 @@ public class AddnewpostActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public void getProfile(final String Option){
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("MyWorld").child("User").child(firebaseAuth.getUid());
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ProfileDataSet profileDataSet = dataSnapshot.getValue(ProfileDataSet.class);
+                UpdateProfile(profileDataSet, Option);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    } public void UpdateProfile(ProfileDataSet profileDataSet, String Option){
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference databaseReference = firebaseDatabase.getReference().child("MyWorld").child("User").child(UserID);
+        Map<String, Object> mypostcount = new HashMap<>();
+        if(Option.equals("add")){
+            mypostcount.put("mypostCount", String.valueOf(Integer.parseInt(profileDataSet.getMypostCount()) + 1));
+        }
+        else if(Option.equals("delete")){
+            mypostcount.put("mypostCount", String.valueOf(Integer.parseInt(profileDataSet.getMypostCount()) - 1));
+        }
+        databaseReference.updateChildren(mypostcount);
     }
 }

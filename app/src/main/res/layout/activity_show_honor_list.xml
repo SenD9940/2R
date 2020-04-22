@@ -13,8 +13,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/Constraint_MainButtons">
 
-
-
     </androidx.recyclerview.widget.RecyclerView>
 
 

@@ -15,6 +15,7 @@ public class PostDataSet {
     private String DownloadURL;
     private String firebaseUser;
     private String Category;
+    private String ImageName;
 
     public PostDataSet(){ }
 
@@ -29,7 +30,7 @@ public class PostDataSet {
         this.Category = Category;
         this.Uid = Uid;
     }
-    public PostDataSet(String PostTitle, String PostExplanation, String PostEditor, String CommentOption, String DownloadURL, String PostViewCount, String AdViewCount, String Uid, String firebaseUserImage, String Category){
+    public PostDataSet(String PostTitle, String PostExplanation, String PostEditor, String CommentOption, String DownloadURL, String PostViewCount, String AdViewCount, String Uid, String firebaseUserImage, String Category, String ImageName){
         this.firebaseUser = firebaseUserImage;
         this.PostTitle = PostTitle;
         this.PostEditor = PostEditor;
@@ -40,6 +41,7 @@ public class PostDataSet {
         this.PostAdExposureCount = AdViewCount;
         this.Category = Category;
         this.Uid = Uid;
+        this.ImageName = ImageName;
     }
 
     public String getCommentOption() {
@@ -123,6 +125,14 @@ public class PostDataSet {
         Category = category;
     }
 
+
+    public String getImageName() {
+        return ImageName;
+    }
+
+    public void setImageName(String imageName) {
+        ImageName = imageName;
+    }
 
 
 }
