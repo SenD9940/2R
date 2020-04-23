@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ShowHonorListActivity"></activity>
+        <activity android:name=".ProfileUpdateActivity"></activity>
+        <activity android:name=".ShowHonorListActivity" />
         <activity android:name=".ShowpostActivity" />
         <activity
             android:name=".AddnewpostActivity"

@@ -82,6 +82,7 @@ public class AddnewpostActivity extends AppCompatActivity {
     private String AdViewCount = "0";
     private ArrayList<ProfileDataSet> profileDataSet;
     private Spinner Spinner_Category;
+    private String UserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +94,7 @@ public class AddnewpostActivity extends AppCompatActivity {
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
         PhotoUri = null;
+        getProfile();
 
         View view = getWindow().getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -223,6 +225,23 @@ public class AddnewpostActivity extends AppCompatActivity {
     private void setImage(){
         imageView_Preview.setImageURI(PhotoUri);
     }
+    private void getProfile(){
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference.child("MyWorld").child("User").child(firebaseAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ProfileDataSet profileDataSet = dataSnapshot.getValue(ProfileDataSet.class);
+                UserName = profileDataSet.getProfileName();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     public void addPost(String Title, String Contents, String Artist, String UserID, String CommentOption, String ViewCount, String AdViewCount, String Category){
         String ProfileImage = this.profileDataSet.get(0).getProfileImageUrl();
@@ -258,7 +277,7 @@ public class AddnewpostActivity extends AppCompatActivity {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         final String now = simpleDateFormat.format(date);
         if(PhotoUri != null){
-            storageReference = storageReference.child("PostImage/" + Artist + now);
+            storageReference = storageReference.child("PostImage/" + UserName + now);
             uploadTask = storageReference.putFile(PhotoUri);
 
             final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -317,7 +336,7 @@ public class AddnewpostActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.Button_Upload:
-                addPost(EditText_PostTitle.getText().toString(), EditText_PostContents.getText().toString(), Artist, UserID, CommentOption, ViewCount, AdViewCount, Category);
+                addPost(EditText_PostTitle.getText().toString(), EditText_PostContents.getText().toString(), UserName, UserID, CommentOption, ViewCount, AdViewCount, Category);
                 break;
             case R.id.ImageButton_AddPicutre:
                 goToAlbum();

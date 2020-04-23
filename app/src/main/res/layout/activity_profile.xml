@@ -7,24 +7,62 @@
     tools:context=".ProfileActivity">
 
 
+    <androidx.appcompat.widget.Toolbar
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="3dp"
+        android:id="@+id/profile_toolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="프로필"
+                android:textColor="@android:color/black"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:padding="5dp"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="0dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/icon_setting"
+                android:clickable="true"
+                android:id="@+id/Button_Profile_Setting"
+                android:onClick="onclick"
+                android:padding="5dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.Toolbar>
+
     <ImageView
         android:background="@android:color/darker_gray"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@id/EditText_ShowNick"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_toolbar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:layout_margin="15dp"
         android:id="@+id/ImageView_Profile"
         android:layout_height="200dp"
-        android:layout_width="0dp"
+        android:layout_width="200dp"
         android:clickable="true"
         android:onClick="onclick"
-        app:layout_constraintTop_toTopOf="parent"
+        app:roundAsCircle="true"
+        app:layout_constraintTop_toBottomOf="@id/profile_toolbar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 

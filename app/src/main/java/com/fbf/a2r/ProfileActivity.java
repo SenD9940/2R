@@ -17,7 +17,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,7 +41,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private Bitmap bitmap;
-    private CircleImageView profileImage;
+    private SimpleDraweeView profileImage;
     private EditText profileNick;
     private ActionBar actionBar;
     private ImageView Profile_Indicator;
@@ -65,18 +67,23 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         View view = getWindow().getDecorView();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (view != null) {
+                // 23 버전 이상일 때 상태바 하얀 색상에 회색 아이콘 색상을 설정
+                view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                getWindow().setStatusBarColor(Color.parseColor("#f2f2f2"));
+            }
+        }
         view.getSystemUiVisibility();
-        getWindow().setStatusBarColor(Color.parseColor("#ABABAB"));
+        getWindow().setStatusBarColor(Color.parseColor("#ffffff"));
         Profile_Indicator = findViewById(R.id.ImageView_ProfileIndicator);
         Profile_Indicator.setBackgroundColor(Color.BLACK);
         firebaseAuth = firebaseAuth.getInstance();
         click_count = 0;
-        final FirebaseUser user = firebaseAuth.getCurrentUser();
-
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
-        databaseReference = firebaseDatabase.getReference().child("MyWorld").child("User").child(firebaseAuth.getUid());
+        databaseReference = firebaseDatabase.getReference().child("MyWorld").child("User").child(firebaseAuth.getCurrentUser().getUid());
 
         profileImage = findViewById(R.id.ImageView_Profile);
         profileNick = findViewById(R.id.EditText_ShowNick);
@@ -85,34 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
         Button_AddNewWrok.setClickable(true);
         profileNick.setFocusable(false);
         profileNick.setClickable(false);
-        profileNick.setText(firebaseAuth.getCurrentUser().getDisplayName());
         profileNick.setTextSize(35);
-        Thread mThread= new Thread(){
-            @Override
-            public void run() {
-                try{
-                    //현재로그인한 사용자 정보를 통해 PhotoUrl 가져오기
-                    URL url = new URL(user.getPhotoUrl().toString());
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setDoInput(true);
-                    conn.connect();
-                    InputStream is = conn.getInputStream();
-                    bitmap = BitmapFactory.decodeStream(is);
-                } catch (MalformedURLException ee) {
-                    ee.printStackTrace();
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        mThread.start();
-        try{
-            mThread.join();
-            profileImage.setImageBitmap(bitmap);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -130,11 +110,16 @@ public class ProfileActivity extends AppCompatActivity {
     }
     public void setProfile(ProfileDataSet profileDataSet){
         Button_MyPostNumber.setText("내 게시글 수\n" + profileDataSet.getMypostCount());
-
+        profileImage.setImageURI(profileDataSet.getProfileImageUrl());
+        profileNick.setText(profileDataSet.getProfileName());
     }
-
     public void onclick(View view) {
         switch (view.getId()){
+            case R.id.Button_Profile_Setting:
+                Toast.makeText(this, "프로필 설정", Toast.LENGTH_SHORT).show();
+                Intent NewProfile = new Intent(getApplicationContext(), ProfileUpdateActivity.class);
+                startActivity(NewProfile);
+                break;
             case R.id.ImageView_Profile:
                 break;
             case R.id.Button_AddNewWrok:

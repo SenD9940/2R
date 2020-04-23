@@ -7,17 +7,18 @@ public class ProfileDataSet {
     String AllAdDisplayCount;
     String ProfileUid;
     String MypostCount;
+    String ProfileImageName;
 
     public ProfileDataSet(){}
 
-    public ProfileDataSet(String ProfileName, String ProfileImageUrl, String AllPostViewCount, String AllAdDisplayCount, String ProfileUid, String MypostCount){
+    public ProfileDataSet(String ProfileName, String ProfileImageUrl, String AllPostViewCount, String AllAdDisplayCount, String ProfileUid, String MypostCount, String ProfileIamgeName){
         this.ProfileName = ProfileName;
         this.ProfileImageUrl = ProfileImageUrl;
         this.AllPostViewCount = AllPostViewCount;
         this.AllAdDisplayCount = AllAdDisplayCount;
         this.ProfileUid = ProfileUid;
         this.MypostCount = MypostCount;
-
+        this.ProfileImageName = ProfileIamgeName;
     }
 
     public String getProfileName() {
@@ -66,5 +67,13 @@ public class ProfileDataSet {
 
     public void setMypostCount(String mypostCount) {
         MypostCount = mypostCount;
+    }
+
+    public String getProfileImageName() {
+        return ProfileImageName;
+    }
+
+    public void setProfileImageName(String profileImageName) {
+        ProfileImageName = profileImageName;
     }
 }
