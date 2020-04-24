@@ -180,7 +180,7 @@ public class ShowpostActivity extends AppCompatActivity {
 
 
     public void Update(PostDataSet postDataSet){
-        if(postDataSet.getUid() != firebaseAuth.getCurrentUser().getUid()){
+        if(UserID != firebaseUser.getUid()){
             Map<String, Object> viewcount = new HashMap<String, Object>();
             viewcount.put("postViewCount", String.valueOf(Integer.parseInt(postDataSet.getPostViewCount()) + 1));
             databaseReference.child(Key).updateChildren(viewcount);
