@@ -180,9 +180,11 @@ public class ShowpostActivity extends AppCompatActivity {
 
 
     public void Update(PostDataSet postDataSet){
-        Map<String, Object> viewcount = new HashMap<String, Object>();
-        viewcount.put("postViewCount", String.valueOf(Integer.parseInt(postDataSet.getPostViewCount()) + 1));
-        databaseReference.child(Key).updateChildren(viewcount);
+        if(postDataSet.getUid() != firebaseAuth.getCurrentUser().getUid()){
+            Map<String, Object> viewcount = new HashMap<String, Object>();
+            viewcount.put("postViewCount", String.valueOf(Integer.parseInt(postDataSet.getPostViewCount()) + 1));
+            databaseReference.child(Key).updateChildren(viewcount);
+        }
 
     }
     public void getProfile(final String Option){
