@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,13 +22,29 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.security.auth.callback.Callback;
 
 
-public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.MyViewHolder> {
+public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.MyViewHolder>{
     private static ArrayList<PostDataSet> mDataset;
     private static ArrayList<String> keys;
     private static Context mContext;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private String ProfileImage;
+    private String ProfileName;
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -41,7 +60,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.MyView
             ImageView_CardView_Image = v.findViewById(R.id.ImageView_CardView_Image);
             TextView_ViewCount = v.findViewById(R.id.TextView_ViewCount);
             CircleImageView_PostProfileImage = v.findViewById(R.id.CircleImageView_PostProfileImage);
-
             TextView_PostProfileName = v.findViewById(R.id.TextView_PostProfileName);
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -66,7 +84,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.MyView
     }
     public CardViewAdapter(){}
     // Provide a suitable constructor (depends on the kind of dataset)
-    public CardViewAdapter(ArrayList<PostDataSet> myDataset, ArrayList<String> mykeys,Context context) {
+    public CardViewAdapter(ArrayList<PostDataSet> myDataset, ArrayList<String> mykeys ,Context context) {
         Fresco.initialize(context);
         mDataset = myDataset;
         mContext = context;
@@ -89,7 +107,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.MyView
         }
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         if(mDataset.get(position).getDownloadURL() != null){
@@ -117,7 +134,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.MyView
         else {
             holder.ImageView_CardView_Image.setVisibility(View.GONE);
         }
-        holder.CircleImageView_PostProfileImage.setImageURI(Uri.parse(mDataset.get(position).getFirebaseUser()));
+        holder.CircleImageView_PostProfileImage.setImageURI(mDataset.get(position).getFirebaseUser());
         holder.TextView_PostProfileName.setText(mDataset.get(position).getPostEditor());
         holder.CardView_Title.setText(mDataset.get(position).getPostTitle());
         holder.CardView_ConTents.setText(mDataset.get(position).getPostExplanation());
@@ -125,6 +142,9 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.MyView
 
 
     }
+
+    // Replace the contents of a view (invoked by the layout manager)
+
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override

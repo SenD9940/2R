@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -75,6 +77,22 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         ImageView_Update_Profile_Image = findViewById(R.id.ImageView_Update_Profile_Image);
         TextView_Update_Profile_Image = findViewById(R.id.TextView_Update_Profile_Image);
 
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle("프로필 변경에 관한 안내");
+        builder.setMessage("프로필을 변경하시게 되면 이전에 작성한 글에 대한 프로필 이미지가 나오지 않을 수 있습니다");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.show();
     }
 
     private void getProfile(){
@@ -183,7 +201,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         databaseReference = databaseReference.child("MyWorld").child("User").child(firebaseAuth.getCurrentUser().getUid());
         if(Uri != null){
             Map<String, Object> update = new HashMap<>();
-            if(newName != null){
+            if(newName.length() != 0){
                 update.put("profileName", newName);
             }
             update.put("profileImageUrl", Uri);

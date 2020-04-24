@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -75,14 +76,16 @@ public class MainActivity extends AppCompatActivity {
     private PostDataSet postDataSet;
     private ImageView Profile_Indicator, Main_Indicator, ImageView_Category;
     private ArrayList<PostDataSet> postDataSets;
-    private ArrayList<String> postKeys;
+    private ArrayList<String> postKeys, ProfileImage, ProfileName;
     public static Activity _MainActivity;
     private SimpleDraweeView SimpleDraweeViewProfileImage;
     private String getCategory;
     private Toolbar toolbar;
+    private EditText EditText_Search;
     private DrawerLayout mdrawerLayout;
     private TextView TextView_Drawer_ProfileName;
     private int click_count;
+    private int search_click_count;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,12 +100,14 @@ public class MainActivity extends AppCompatActivity {
         Button_ShowProfile = findViewById(R.id.Button_Profile);
         Profile_Indicator = findViewById(R.id.ImageView_ProfileIndicator);
         TextView_Drawer_ProfileName = findViewById(R.id.TextView_Drawer_ProfileName);
+        EditText_Search = findViewById(R.id.EditText_Search);
         Main_Indicator = findViewById(R.id.ImageView_MainIndicator);
         Main_Indicator.setBackgroundColor(Color.BLACK);
         SimpleDraweeViewProfileImage = findViewById(R.id.SimpleDraweeView_Drawer_ProfileImage);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         click_count = 0;
+        search_click_count = 0;
         mdrawerLayout = findViewById(R.id.drawer_layout);
         View view = getWindow().getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -124,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             TextView_Drawer_ProfileName.setText(firebaseUser.getDisplayName());
 
         }
-        post(null);
+        post(null, null);
         Button_ShowProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,11 +147,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void setCategory(String getCategory){
         if(getCategory != null){
-            post(getCategory);
+            post(getCategory, null);
         }
     }
 
-    public void post(final String category){
+    public void post(final String category, final String Search){
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("로딩중...");
         progressDialog.show();
@@ -172,10 +177,19 @@ public class MainActivity extends AppCompatActivity {
                             mAdapter.notifyDataSetChanged();
                         }
                     }else{
-                        Log.d("post", String.valueOf(postDataSet));
-                        postDataSets.add(0, postDataSet);
-                        postKeys.add(0, Snapshot.getKey());
-                        mAdapter.notifyDataSetChanged();
+                        if(Search != null){
+                            if(postDataSet.getPostTitle().contains(Search)){
+                                postDataSets.add(0, postDataSet);
+                                postKeys.add(0, Snapshot.getKey());
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }else{
+                            Log.d("post", String.valueOf(postDataSet));
+                            postDataSets.add(0, postDataSet);
+                            postKeys.add(0, Snapshot.getKey());
+                            mAdapter.notifyDataSetChanged();
+                        }
+
                     }
 
                 }
@@ -189,8 +203,8 @@ public class MainActivity extends AppCompatActivity {
         });
         mAdapter = new CardViewAdapter(postDataSets, postKeys, MainActivity.this);
         RecyclerView_CardView.setAdapter(mAdapter);
-    }
 
+    }
 
     @Override
     public void onBackPressed() {
@@ -202,29 +216,42 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     public void onclick(View view) {
         switch (view.getId()){
+            case R.id.Button_Search:
+                if(search_click_count == 0){
+                    EditText_Search.setVisibility(View.VISIBLE);
+                    search_click_count = 1;
+                }else if(search_click_count == 1){
+                    String Search = EditText_Search.getText().toString();
+                    post(null, Search);
+                    EditText_Search.setVisibility(View.GONE);
+                    search_click_count = 0;
+                }
+                break;
             case R.id.Button_Honor:
                 Intent Honor = new Intent(this, ShowHonorListActivity.class);
                 startActivity(Honor);
                 overridePendingTransition(0, 0);
                 finish();
-
                 break;
             case R.id.Button_Main:
                 getCategory = null;
-                post(getCategory);
+                EditText_Search.setVisibility(View.GONE);
+                search_click_count = 0;
+                post(getCategory, null);
                 break;
             case R.id.Button_Category_Illu:
                 getCategory = "일러스트";
-                post(getCategory);
+                post(getCategory, null);
                 onBackPressed();
                 break;
             case R.id.Button_Category:
                 mdrawerLayout.openDrawer(GravityCompat.START);
                 break;
             case R.id.Button_Refresh:
-                post(getCategory);
+                post(getCategory, null);
                 Toast.makeText(this, "새로고침 되었습니다", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.Button_Main_Menu:

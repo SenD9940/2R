@@ -37,6 +37,25 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent" />
 
+                <EditText
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/EditText_Search"
+                    android:hint="검색어를 입력하세요"
+                    app:layout_constraintLeft_toRightOf="@id/TextView_AppTitle"
+                    app:layout_constraintRight_toLeftOf="@id/Button_Search"/>
+
+                <ImageView
+                    android:id="@+id/Button_Search"
+                    android:layout_width="30dp"
+                    android:onClick="onclick"
+                    android:clickable="true"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_search"
+                    app:layout_constraintRight_toLeftOf="@id/Button_Refresh"/>
+
+
                 <ImageView
                     android:id="@+id/Button_Refresh"
                     android:layout_width="30dp"
@@ -59,6 +78,7 @@
                     android:layout_height="match_parent"/>
 
                 <TextView
+                    android:id="@+id/TextView_AppTitle"
                     android:text="MyWorld"
                     android:textColor="@android:color/black"
                     android:autoSizeTextType="uniform"

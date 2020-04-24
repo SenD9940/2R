@@ -89,7 +89,6 @@ public class ShowpostActivity extends AppCompatActivity {
         final Intent post = getIntent();
         Title = post.getStringExtra("Title");
         Contents = post.getStringExtra("Contents");
-        Author = post.getStringExtra("Author");
         GetDownloadUrl = post.getStringExtra("Image");
         ViewCount = post.getStringExtra("ViewCount");
         Key = post.getStringExtra("Key");
@@ -110,11 +109,11 @@ public class ShowpostActivity extends AppCompatActivity {
 
             }
         });
+        getProfile("UpdatePostViewCount");
         TextView_ShowPost_Title.setText(Title);
         TextView_ShowPost_Contents.setText(Contents);
         TextView_ShowPost_Author.setText(Author);
         TextView_ShowPost_ViewCount.setText(ViewCount);
-        getProfile("UpdatePostViewCount");
 
         if(GetDownloadUrl != null){
             SimpleDraweeView_ShowPost_PostImage.setVisibility(View.VISIBLE);
@@ -180,7 +179,7 @@ public class ShowpostActivity extends AppCompatActivity {
 
 
     public void Update(PostDataSet postDataSet){
-        if(UserID != firebaseUser.getUid()){
+        if(!UserID.equals(firebaseUser.getUid())){
             Map<String, Object> viewcount = new HashMap<String, Object>();
             viewcount.put("postViewCount", String.valueOf(Integer.parseInt(postDataSet.getPostViewCount()) + 1));
             databaseReference.child(Key).updateChildren(viewcount);
@@ -194,7 +193,10 @@ public class ShowpostActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ProfileDataSet profileDataSet = dataSnapshot.getValue(ProfileDataSet.class);
-                UpdateProfile(profileDataSet, Option);
+                Author = profileDataSet.getProfileName();
+                if(!UserID.equals(firebaseUser.getUid())){
+                    UpdateProfile(profileDataSet, Option);
+                }
             }
 
             @Override
@@ -206,6 +208,7 @@ public class ShowpostActivity extends AppCompatActivity {
     public void DeletePost(){
         if(UserID.equals(firebaseUser.getUid())){
             AlertDialog.Builder builder = new AlertDialog.Builder(ShowpostActivity.this);
+            builder.setCancelable(false);
             builder.setTitle("글 삭제");
             builder.setMessage("정말로 글을 삭제하시겠습니까?\n삭제된 글을 복구가 불가능합니다");
             builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
