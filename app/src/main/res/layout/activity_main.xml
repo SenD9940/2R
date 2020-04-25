@@ -99,7 +99,7 @@
             app:layout_constraintBottom_toTopOf="@id/Constraint_MainButtons"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintVertical_bias="1.0"
-            tools:layout_editor_absoluteX="5dp">
+            tools:layout_editor_absoluteX="180dp">
 
         </androidx.recyclerview.widget.RecyclerView>
 

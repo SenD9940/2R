@@ -130,7 +130,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if(click_count < 1) {
                     click_count += 1;
                     Intent main = new Intent(ProfileActivity.this, MainActivity.class);
-                    main.putExtra("로그인로그", "profile");
+                    main.putExtra("로그인로그", "GoogleLogin");
                     startActivity(main);
                     overridePendingTransition(0, 0);
                     finish();

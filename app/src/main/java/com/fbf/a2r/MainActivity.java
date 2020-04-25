@@ -121,13 +121,27 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(Color.parseColor("#ffffff"));
         Loginlog = getLoginlog.getStringExtra("로그인로그");
         // specify an adapter (see also next example)
-        if (!Loginlog.equals("guestlogin")) {
+        if (Loginlog.equals("GoogleLogin")) {
+            Toast.makeText(this, "좋은하루 되세요~", Toast.LENGTH_SHORT).show();
             firebaseAuth = firebaseAuth.getInstance();
             myName = firebaseAuth.getCurrentUser().getDisplayName();
             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
             SimpleDraweeViewProfileImage.setImageURI(firebaseUser.getPhotoUrl());
             TextView_Drawer_ProfileName.setText(firebaseUser.getDisplayName());
 
+        }else if(Loginlog.equals("AdminLogin")){
+            firebaseAuth = firebaseAuth.getInstance();
+            if(!firebaseAuth.getCurrentUser().getUid().equals("rplfbZgG6FgZqWUYIqGKxKD9cHu2")){
+                Toast.makeText(this, "이 계정에는 관리자 권한이 없습니다", Toast.LENGTH_LONG).show();
+                Intent none =  new Intent(MainActivity.this, LoginActivity.class);
+                none.putExtra("Failed", "fail");
+                startActivity(none);
+                finish();
+            }else{
+                Toast.makeText(this, "관리자님 어서오세요", Toast.LENGTH_LONG).show();
+            }
+        }else{
+            Toast.makeText(this, "게스트로 로그인 되었습니다", Toast.LENGTH_LONG).show();
         }
         post(null, null);
         Button_ShowProfile.setOnClickListener(new View.OnClickListener() {

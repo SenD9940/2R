@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
     private RelativeLayout signInButton, Button_GuestLogin, Button_AdminLogin;
     private ImageView icon_google;
+    private String LoginOption;
     private FirebaseStorage firebaseStorage;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -85,12 +86,16 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         isExsitProfile();
 
-        if (mAuth.getCurrentUser() != null) {
-            Intent intent = new Intent(getApplication(), MainActivity.class);
-            Toast.makeText(this, "자동로그인 되었습니다", Toast.LENGTH_SHORT).show();
-            intent.putExtra("로그인로그", "googleLogin");
-            startActivity(intent);
-            finish();
+        Intent getfail = getIntent();
+        String fail = getfail.getStringExtra("Failed");
+
+        if(fail == null){
+            if (mAuth.getCurrentUser() != null) {
+                Intent intent = new Intent(getApplication(), MainActivity.class);
+                intent.putExtra("로그인로그", "GoogleLogin");
+                startActivity(intent);
+                finish();
+            }
         }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -100,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                LoginOption = "Normal";
                 signIn();
             }
         });
@@ -109,6 +115,7 @@ public class LoginActivity extends AppCompatActivity {
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+
     }
 
     @Override
@@ -132,14 +139,11 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Toast.makeText(getApplicationContext(), "로그인에 성공 했습니다", Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            updateUI(user, LoginOption);
                         } else {
-                            // If sign in fails, display a message to the user.
                             Toast.makeText(getApplicationContext(), "로그인에 실패했습니다\n네트워크를 확인해 주세요", Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+                            updateUI(null, null);
                         }
                     }
                 });
@@ -185,20 +189,21 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUI(FirebaseUser user) { //update ui code here
+    private void updateUI(FirebaseUser user, String LoginOption) { //update ui code here
         if (user != null) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             setProfile();
-            Toast.makeText(getApplicationContext(), "환영합니다^^", Toast.LENGTH_SHORT).show();
-            intent.putExtra("로그인로그", "googleLogin");
+            if(LoginOption.equals("Normal")){
+                intent.putExtra("로그인로그", "GoogleLogin");
+            }
+            else if(LoginOption.equals("Admin")){
+                intent.putExtra("로그인로그", "AdminLogin");
+            }
             startActivity(intent);
             finish();
         }
     }
 
-    public void ChooseCategory(){
-
-    }
 
     public void onclick(View view) {
         switch (view.getId()){
@@ -210,9 +215,8 @@ public class LoginActivity extends AppCompatActivity {
                 break;
 
             case R.id.Button_LoginAdmin:
-                Intent Admin_login = new Intent(this, MainActivity.class);
-                Admin_login.putExtra("로그인로그", "adminlogin");
-                startActivity(Admin_login);
+                LoginOption = "Admin";
+                signIn();
                 break;
         }
     }

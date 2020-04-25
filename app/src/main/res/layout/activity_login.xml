@@ -85,6 +85,7 @@
             android:id="@+id/Button_LoginAdmin"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:onClick="onclick"
             android:background="@drawable/adminlogin_button"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="10dp"
